@@ -1,0 +1,17 @@
+{
+  "id": "./",
+  "name": "Ahorro · Tu cuenta personal",
+  "short_name": "Ahorro",
+  "description": "Controla tu saldo y ahorra para tus objetivos.",
+  "lang": "es",
+  "start_url": "./",
+  "scope": "./",
+  "display": "standalone",
+  "background_color": "#0b0b0a",
+  "theme_color": "#0b0b0a",
+  "icons": [
+    { "src": "icons/ahorro-192.png", "sizes": "192x192", "type": "image/png", "purpose": "any" },
+    { "src": "icons/ahorro-512.png", "sizes": "512x512", "type": "image/png", "purpose": "any" },
+    { "src": "icons/ahorro-maskable.png", "sizes": "512x512", "type": "image/png", "purpose": "maskable" }
+  ]
+}

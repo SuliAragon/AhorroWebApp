@@ -1,0 +1,168 @@
+---
+import Icon from '../components/Icon.astro';
+import '../styles/main.css';
+import { THEME_KEY, THEME_COLORS } from '../scripts/theme.js';
+
+const root = import.meta.env.BASE_URL.replace(/\/?$/, '/');
+const sections = [
+  ['resumen', 'Inicio', 'home'],
+  ['movimientos', 'Historial', 'arrows'],
+  ['nuevo', 'Añadir movimiento', 'plus'],
+  ['analisis', 'Análisis', 'mark'],
+];
+---
+<!doctype html>
+<html lang="es" data-theme="dark">
+  <head>
+    <meta charset="utf-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover" />
+    <meta name="description" content="Consulta tus ingresos, gastos y dinero destinado por concepto. Lleva contigo tu cuenta en CSV." />
+    <meta name="theme-color" content="#0b0b0a" />
+    <script define:vars={{ themeKey: THEME_KEY, lightColor: THEME_COLORS.light }}>
+      try {
+        if (localStorage.getItem(themeKey) === 'light') {
+          document.documentElement.dataset.theme = 'light';
+          document.querySelector('meta[name="theme-color"]').content = lightColor;
+        }
+      } catch { /* The default theme works without storage. */ }
+      window.addEventListener('error', (event) => {
+        if (event.target instanceof HTMLScriptElement && event.target.type === 'module') {
+          document.getElementById('load-error')?.removeAttribute('hidden');
+        }
+      }, true);
+    </script>
+    <link rel="icon" type="image/png" sizes="192x192" href={root + 'icons/ahorro-192.png'} />
+    <link rel="icon" type="image/svg+xml" sizes="any" href={root + 'icons/ahorro.svg'} />
+    <link rel="apple-touch-icon" sizes="180x180" href={root + 'icons/ahorro-180.png'} />
+    <link rel="manifest" href={root + 'manifest.webmanifest'} />
+    <title>Ahorro · Tu cuenta personal</title>
+  </head>
+  <body data-base={root}>
+    <a class="skip-link" href="#contenido">Saltar al contenido</a>
+    <header class="site-header">
+      <div class="shell header-inner">
+        <a class="brand" href="#resumen" aria-label="Ahorro, resumen">
+          <img src={root + 'icons/ahorro.svg'} width="24" height="24" alt="" />
+          <span>Ahorro<span class="brand-dot">.</span></span>
+        </a>
+        <div class="header-actions">
+          <button class="icon-button theme-button" data-action="theme" type="button" aria-label="Modo claro" aria-pressed="false" title="Cambiar a modo claro">
+            <span class="theme-sun"><Icon name="sun" size={20} /></span>
+            <span class="theme-moon"><Icon name="moon" size={20} /></span>
+          </button>
+          <button class="settings-button text-button" data-action="settings" type="button"><Icon name="settings" size={17} /> Ajustes</button>
+        </div>
+      </div>
+    </header>
+    <main class="shell" id="contenido" tabindex="-1">
+      <noscript><p class="banner">Activa JavaScript para usar tu cuenta de ahorro.</p></noscript>
+      <div class="banner" id="load-error" role="alert" hidden><span>Ahorro no se ha cargado por completo.</span><a class="text-button" href="?recargar=1">Volver a cargar</a></div>
+      <div class="banner demo-banner" id="demo-banner" hidden><span>Cuenta de ejemplo</span><button class="text-button" type="button" data-action="exit-demo">Salir del ejemplo <Icon name="east" size={16} /></button></div>
+      <div class="banner" id="storage-banner" hidden role="alert"></div>
+
+      <section id="resumen" class="view" data-page="resumen" aria-labelledby="title-summary">
+        <div class="balance-panel">
+          <h1 id="title-summary" class="metric-title">Saldo total</h1>
+          <strong id="total-balance" class="big-value">0,00 €</strong>
+          <div class="balance-metrics">
+            <button class="balance-stat" type="button" data-action="list-concepts" data-type="income" aria-haspopup="dialog"><span class="metric-caption">Ingresos <Icon name="right" size={13} /></span><strong id="total-income" class="metric-value">0,00 €</strong></button>
+            <button class="balance-stat" type="button" data-action="list-concepts" data-type="expense" aria-haspopup="dialog"><span class="metric-caption">Gastos <Icon name="right" size={13} /></span><strong id="total-expenses" class="metric-value">0,00 €</strong></button>
+          </div>
+          <button class="text-button deposit-shortcut" type="button" data-action="new-deposit" data-editable><Icon name="down" size={14} /> Depositar ahorro</button>
+        </div>
+        <section class="panel home-movements" aria-labelledby="home-movements-title">
+          <div class="feed-heading"><h2 id="home-movements-title">Movimientos</h2><a href="#movimientos" class="text-button">Ver historial <Icon name="right" size={14} /></a></div>
+          <div id="home-movements"></div>
+        </section>
+      </section>
+
+      <section id="movimientos" class="view" data-page="movimientos" aria-labelledby="title-movements" hidden>
+        <div class="page-head">
+          <h1 id="title-movements">Historial</h1>
+        </div>
+        <section class="panel" aria-label="Listado de movimientos">
+          <details class="movement-filters">
+            <summary>Buscar y filtrar <span id="filter-indicator" hidden></span></summary>
+            <div class="filter-bar">
+              <label>Buscar<input type="search" id="movement-query" placeholder="Concepto o categoría" /></label>
+              <label>Tipo<select id="movement-type"><option value="">Todos</option><option value="income">Ingresos</option><option value="expense">Gastos</option><option value="deposit">Depósitos</option></select></label>
+              <label>Mes<select id="movement-month"><option value="">Todos los meses</option></select></label>
+            </div>
+          </details>
+          <section class="history-chart" aria-labelledby="history-chart-title">
+            <div class="history-chart-heading">
+              <h2 id="history-chart-title">Por categoría</h2>
+              <select id="movement-category" aria-label="Categoría"><option value="">Todas las categorías</option></select>
+            </div>
+            <div class="history-chart-legend" id="history-chart-legend" hidden><span class="history-legend-income">Ingresos</span><span class="history-legend-expense">Gastos</span></div>
+            <ul class="list history-chart-list" id="history-chart-bars" aria-label="Importes por categoría"></ul>
+            <p class="feed-empty" id="history-chart-empty" hidden>No hay movimientos para estos filtros.</p>
+          </section>
+          <p id="filtered-count" class="sr-only" aria-live="polite"></p>
+          <div id="all-movements"></div>
+        </section>
+      </section>
+
+      <section id="analisis" class="view" data-page="analisis" aria-labelledby="title-analysis" hidden>
+        <div class="page-head">
+          <h1 id="title-analysis">Análisis</h1>
+          <div class="period-control" role="group" aria-label="Mes de referencia">
+            <button class="icon-button" type="button" data-action="previous-month" aria-label="Mes anterior"><Icon name="left" size={15} /></button>
+            <span id="month-label" aria-live="polite"></span>
+            <button class="icon-button" type="button" data-action="next-month" aria-label="Mes siguiente"><Icon name="right" size={15} /></button>
+          </div>
+        </div>
+        <div class="month-metrics" aria-label="Entradas, gastos y ahorro del mes seleccionado">
+          <div><span class="metric-caption">Entradas</span><strong id="month-income" class="metric-value">0,00 €</strong></div>
+          <div><span class="metric-caption">Gastos</span><strong id="month-expenses" class="metric-value">0,00 €</strong></div>
+          <div><span class="metric-caption">Ahorro</span><strong id="month-savings" class="metric-value">0,00 €</strong></div>
+        </div>
+      </section>
+
+      <section id="copias" class="view" data-page="copias" aria-labelledby="title-backup" hidden>
+        <div class="page-head">
+          <h1 id="title-backup">Copias CSV</h1>
+        </div>
+        <div class="backup-grid">
+          <section class="panel backup-panel">
+            <Icon name="download" size={26} />
+            <h2>Exportar mi cuenta</h2>
+            <p>Descarga un CSV con el ahorro inicial, los movimientos, las reservas y los precios objetivo.</p>
+            <button class="button solid" type="button" data-action="export" data-editable><Icon name="download" size={17} /> Descargar CSV</button>
+            <button class="button outline" type="button" data-action="export-photos" data-editable hidden>Descargar con fotos</button>
+          </section>
+          <section class="panel backup-panel">
+            <Icon name="upload" size={26} />
+            <h2>Importar un CSV</h2>
+            <p>Restaura una copia de Ahorro o elige las columnas de un CSV bancario para añadir sus movimientos.</p>
+            <button class="button outline" type="button" data-action="import" data-editable><Icon name="upload" size={17} /> Elegir archivo</button>
+            <input hidden type="file" id="csv-file" accept=".csv,.tsv,text/csv,text/tab-separated-values" />
+          </section>
+        </div>
+        <section class="panel privacy-panel">
+          <Icon name="lock" size={21} />
+          <div><h2>Datos en este dispositivo</h2><p>Tu cuenta se guarda en este navegador. Exporta una copia antes de cambiar de dispositivo o borrar los datos del sitio. El CSV descargado contiene tus datos y debes guardarlo en un lugar privado.</p></div>
+        </section>
+      </section>
+
+    </main>
+
+    <nav class="navigation shell" aria-label="Secciones">
+      {sections.map(([key, label, icon]) => key === 'nuevo' ? (
+        <button class="nav-add" type="button" data-action="new-movement" data-editable aria-label={label} title={label}><Icon name={icon} size={23} /><span>Añadir</span></button>
+      ) : (
+        <a href={'#' + key} data-nav={key} aria-current={key === 'resumen' ? 'page' : undefined}><Icon name={icon} size={19} />{label}</a>
+      ))}
+    </nav>
+
+    <dialog id="dialog" aria-labelledby="dialog-title">
+      <div class="dialog-head"><h2 id="dialog-title"></h2><button type="button" class="icon-button" data-action="close-dialog" aria-label="Cerrar"><Icon name="close" size={21} /></button></div>
+      <div id="dialog-content"></div>
+    </dialog>
+    <div id="toast" role="status" aria-live="polite"></div>
+    <datalist id="categories"></datalist>
+    <script>
+      import '../scripts/ui.js';
+    </script>
+  </body>
+</html>
