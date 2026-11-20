@@ -16,6 +16,7 @@ const esc = (text) => String(text ?? '').replace(/[&<>"']/g, (char) => ({ '&': '
 const icon = (name, size = 17) => `<svg width="${size}" height="${size}" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.55" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="${iconPaths[name]}"/></svg>`;
 const dialog = $('#dialog');
 const dialogContent = $('#dialog-content');
+const touchControls = window.matchMedia('(hover: none) and (pointer: coarse)');
 const current = () => localDate().slice(0, 7);
 let month = current();
 let page = 'resumen';
@@ -288,7 +289,9 @@ function openDialog(title, content, wide = false) {
   setText('dialog-title', title);
   dialogContent.innerHTML = content;
   if (!dialog.open) dialog.showModal();
-  ($('input:not([hidden]), select, [data-autofocus]', dialogContent) || $('.dialog-head button', dialog)).focus();
+  dialog.scrollTop = 0;
+  const firstControl = touchControls.matches ? null : $('input:not([hidden]), select, [data-autofocus]', dialogContent);
+  (firstControl || $('.dialog-head button', dialog)).focus({ preventScroll: true });
 }
 
 const conceptsByName = () => [...collectConcepts(data()).values()].sort((a, b) => a.name.localeCompare(b.name, 'es'));
@@ -645,7 +648,8 @@ function editMovement(entry, defaultType = 'expense', destination) {
     if (!choice) return;
     conceptInput.value = choice.dataset.choice;
     picker.open = false;
-    conceptInput.focus();
+    const nextControl = touchControls.matches ? $('summary', picker) : conceptInput;
+    nextControl.focus({ preventScroll: true });
   });
   const categoryField = form.elements.category;
   const shortcuts = all('[data-category]', form);
