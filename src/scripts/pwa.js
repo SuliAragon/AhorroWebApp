@@ -21,6 +21,6 @@ export async function installApp() {
 if (import.meta.env.PROD && 'serviceWorker' in navigator) {
   const base = document.body.dataset.base;
   navigator.serviceWorker.register(base + 'sw.js', { scope: base }).catch((error) => {
-    console.warn('Ahorro no ha podido activar el modo sin conexión.', error);
+    console.warn('Aparta no ha podido activar el modo sin conexión.', error);
   });
 }

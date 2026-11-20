@@ -749,7 +749,7 @@ async function downloadAccount(withPhotos) {
     const url = URL.createObjectURL(file);
     const link = document.createElement('a');
     link.href = url;
-    link.download = 'ahorro-copia-' + (attachments.size ? 'con-fotos-' : '') + localDate() + '.csv';
+    link.download = 'aparta-copia-' + (attachments.size ? 'con-fotos-' : '') + localDate() + '.csv';
     document.body.append(link);
     link.click();
     link.remove();
@@ -769,7 +769,7 @@ function previewBackup({ account: restored, photos }) {
   if (restored.targets.length) counts.push(plural(restored.targets.length, 'precio objetivo', 'precios objetivo'));
   const reviewed = JSON.stringify(account);
   const hadPhotos = photoIds(account).length > 0;
-  openForm('Restaurar copia de Ahorro', `
+  openForm('Restaurar copia de Aparta', `
     <p class="dialog-copy">La copia contiene ${counts.join(', ')} y ${plural(photos.size, 'foto')}. Ahorro inicial de ${money(restored.opening)}.</p>
     <p class="dialog-copy">Al restaurarla se reemplazará tu cuenta de este navegador${hadPhotos ? ', incluidas las fotos actuales' : ''}.</p>
     <div><button type="button" class="button outline" data-action="${hadPhotos ? 'export-photos' : 'export'}">${hadPhotos ? 'Descargar mi copia con fotos' : 'Descargar mi copia actual'}</button></div>`, 'Restaurar cuenta', async () => {
@@ -939,7 +939,7 @@ document.addEventListener('click', async (event) => {
     case 'close-dialog': dialog.close(); break;
     case 'install': {
       if (await installApp().catch(() => false)) break;
-      openDialog('Instalar Ahorro', `
+      openDialog('Instalar Aparta', `
         <p class="dialog-copy"><strong>Chrome, Edge o Safari en Mac</strong> · Abre el menú del navegador y busca «Instalar» o «Añadir al Dock».</p>
         <p class="dialog-copy"><strong>Safari en iPhone o iPad</strong> · Pulsa Compartir y después «Añadir a pantalla de inicio».</p>
         <p class="dialog-copy"><strong>Chrome en Android</strong> · Abre el menú y elige «Añadir a pantalla de inicio» o «Instalar aplicación».</p>

@@ -1,8 +1,8 @@
-# Ahorro
+# Aparta
 
 Aplicación estática de Astro para registrar ingresos y gastos, calcular el ahorro y reservar dinero para objetivos. La interfaz y los importes usan español y euros.
 
-[Abrir Ahorro](https://suliaragon.github.io/AhorroWebApp/)
+[Abrir Aparta](https://suliaragon.github.io/AhorroWebApp/)
 
 ## Desarrollo local
 
@@ -42,7 +42,7 @@ El gráfico de **Historial** muestra los ingresos y gastos por categoría. El se
 
 Cada gasto admite una foto opcional. Puedes hacerla con la cámara del móvil o elegir una imagen ya guardada. El importe se introduce manualmente. La app reduce la imagen a JPEG y la guarda en IndexedDB en el dispositivo. Abre la foto desde **Movimientos** o edita el gasto para sustituirla o quitarla.
 
-**Descargar con fotos** incluye los adjuntos dentro del CSV. Esta opción aparece al guardar la primera foto y admite copias de hasta 64 MB. Puedes restaurarlas en otro navegador con Ahorro. Guarda estas copias en privado.
+**Descargar con fotos** incluye los adjuntos dentro del CSV. Esta opción aparece al guardar la primera foto y admite copias de hasta 64 MB. Puedes restaurarlas en otro navegador con Aparta. Guarda estas copias en privado.
 
 Puedes importar un extracto bancario con cabecera y delimitador de punto y coma, coma o tabulación. Selecciona fecha, concepto e importe. Se admite una columna de importes con signo o dos columnas separadas para cargos y abonos. Las fechas pueden estar en formato `AAAA-MM-DD` o `DD/MM/AAAA`. La revisión indica los movimientos nuevos, duplicados y filas inválidas. La detección de duplicados compara la fecha, el concepto y el importe de los movimientos ya importados y tiene en cuenta cuántas veces aparecen en el archivo.
 

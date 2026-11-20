@@ -1,7 +1,7 @@
 {
   "id": "./",
-  "name": "Ahorro · Tu cuenta personal",
-  "short_name": "Ahorro",
+  "name": "Aparta · Ahorro por objetivos",
+  "short_name": "Aparta",
   "description": "Controla tu saldo y ahorra para tus objetivos.",
   "lang": "es",
   "start_url": "./",

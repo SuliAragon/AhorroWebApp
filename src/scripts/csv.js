@@ -98,7 +98,7 @@ export function importBackup(rows) {
   const [header, ...data] = rows;
   const withPhotos = header.length === columns.length + 1 && header.at(-1) === photoColumn;
   if ((!withPhotos && header.length !== columns.length) || columns.some((name, index) => name !== header[index])) {
-    throw new Error('Las columnas no coinciden con una copia de Ahorro.');
+    throw new Error('Las columnas no coinciden con una copia de Aparta.');
   }
   const account = emptyAccount();
   const photos = new Map();
